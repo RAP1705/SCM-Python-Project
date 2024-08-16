@@ -1,0 +1,7 @@
+dbname = "SCMBATCH3"
+user = "postgres"
+password = "Just4fun_135"
+host = "localhost"
+port = 5434
+
+

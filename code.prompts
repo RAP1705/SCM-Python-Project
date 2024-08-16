@@ -1,0 +1,58 @@
+you are a expert python developer.
+Here is a python project below which will simply take the user inputs (Barcode ID) from streamlit UI and get the required details from the DB.
+
+
+Improve/modify the python project for below purpose:
+1. Product details should be in proper Tabular format in the output
+2. Each time when user will provide the barcode ID as input, it will display in the same output table in streamlit
+3. Create a new button to generate a pdf (delivery note / challan) from the tabular output (product details)
+4. Generate the pdf on click of delivery note button
+
+
+____________________________________________________________________
+
+
+--> home.py :
+
+import streamlit as st
+from backend.dboperations import get_item_details
+
+
+# st.write("Welcome to ACG this is DAY02 SCM project")
+st.title("SCM - Delivery Note Generation")
+
+barcode = st.text_input("Input for Barcode", help="Enter the barcode for the product which will check in DB")
+
+if st.button("Submit"):
+    item_details = get_item_details(barcode)
+    st.write(item_details)
+
+
+--> dboperations.py :
+
+import psycopg2
+import os
+from dotenv import load_dotenv
+
+load_dotenv('./.env')
+
+
+dbname = os.environ["dbname"]
+user = os.environ["user"]
+password = os.environ["password"]
+host = os.environ["host"]
+port = os.environ["port"]
+
+
+def get_item_details(barcode):
+    item = None
+    conn_str = f"dbname='{dbname}' user='{user}' password='{password}' host='{host}' port='{port}'"
+    try:
+        with psycopg2.connect(conn_str) as conn:
+            with conn.cursor() as cursor:
+                cursor.execute("SELECT product_id, product_name, product_price, product_stock FROM products WHERE barcode = %s", (barcode,))
+                item = cursor.fetchone()
+            
+        return item
+    except Exception as e:
+        print("Database connection failed due to {}".format(e))

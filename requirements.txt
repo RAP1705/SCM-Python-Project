@@ -1,0 +1,8 @@
+streamlit
+psycopg2 
+python-dotenv
+pandas
+fpdf
+opencv-python
+pyzbar
+smtplib
